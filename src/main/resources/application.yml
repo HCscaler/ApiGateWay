@@ -14,6 +14,14 @@ spring:
           uri: lb://AuthService
           predicates:
             - Path=/api/auth/**
+        - id: taskService
+          uri: lb://taskService
+          predicates:
+            - Path=/tasks/**
+        - id: commentService
+          uri: lb://commentService
+          predicates:
+            - Path=/**
 
 eureka:
   client:
