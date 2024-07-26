@@ -21,11 +21,11 @@ spring:
         - id: commentService
           uri: lb://commentService
           predicates:
-            - Path=/**
+            - Path=/comment/**
         - id: projectService
           uri: lb://projectService
           predicates:
-            - Path=/**
+            - Path=/projects/**
 
 eureka:
   client:
