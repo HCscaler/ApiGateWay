@@ -26,6 +26,14 @@ spring:
           uri: lb://projectService
           predicates:
             - Path=/projects/**
+        - id: kanbanService
+          uri: lb://kanbanService
+          predicates:
+            - Path=/kanban/**
+        - id: notificationService
+          uri: lb://notificationService
+          predicates:
+            - Path=/email/**
 
 eureka:
   client:
