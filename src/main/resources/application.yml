@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ApiGateWay
+    name: ApiGateway
   cloud:
     gateway:
       discovery:
@@ -14,33 +14,337 @@ spring:
           uri: lb://AuthService
           predicates:
             - Path=/api/auth/**
-        - id: taskService
-          uri: lb://taskService
+          filters:
+            - name: AuthenticationFilter
+
+        - id: TaskService
+          uri: lb://TaskService
           predicates:
-            - Path=/tasks/**
-        - id: commentService
-          uri: lb://commentService
+            - Path=/v0/task/**
+          filters:
+            - name: AuthenticationFilter
+
+        - id: ProjectService
+          uri: lb://ProjectService
           predicates:
-            - Path=/comment/**
-        - id: projectService
-          uri: lb://projectService
+            - Path=/v0/projects/**
+          filters:
+            - name: AuthenticationFilter
+              args:
+                roles : ROLE_ADMIN
+
+        - id: CommentService
+          uri: lb://CommentService
           predicates:
-            - Path=/projects/**
-        - id: kanbanService
-          uri: lb://kanbanService
+            - Path=/v0/comments/**
+          filters:
+            - name: AuthenticationFilter
+
+        - id: SearchService
+          uri: lb://SearchService
           predicates:
-            - Path=/kanban/**
-        - id: notificationService
-          uri: lb://notificationService
-          predicates:
-            - Path=/email/**
+            - Path=/v0/search/**
+          # Uncomment the filter if needed
+          # filters:
+          #   - name: AuthenticationFilter
+
+jwt:
+  secret: 9cfb1fdb5d564ea897c1e6a3e2f5a9bf1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+  expiration: 360000000
 
 eureka:
   client:
-    service-url:
+    serviceUrl:
       defaultZone: http://localhost:8761/eureka
     enabled: true
+  instance:
+    hostname: localhost
 
-# Set application to run as reactive
-main:
-  web-application-type: reactive
+
+
+#server:
+#  port: 9000
+#spring:
+#  application:
+#    name: ApiGateway
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: AuthService
+#          uri: lb://AuthService
+#          predicates:
+#            - Path=/api/auth/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: TaskService
+#          uri: lb://TaskService
+#          predicates:
+#            - Path=/v0/task/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: ProjectService
+#          uri: lb://ProjectService
+#          predicates:
+#            - Path=/v0/projects/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: CommentService
+#          uri: lb://CommentService
+#          predicates:
+#            - Path=/v0/comments/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: SearchService
+#          uri: lb://SearchService
+#          predicates:
+#            - Path=/v0/search/**
+#          # Uncomment the filter if needed
+#          # filters:
+#          #   - name: AuthenticationFilter
+#
+#jwt:
+#  secret: 9cfb1fdb5d564ea897c1e6a3e2f5a9bf1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+#  expiration: 360000000
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka
+#    enabled: true
+#  instance:
+#    hostname: localhost
+################################################
+#    prefer-ip-address: true
+# Add DNS settings
+#
+#  cloud:
+#    netty:
+#      resolver:
+#        dns:
+#          server:
+#            - 8.8.8.8
+#            - 8.8.4.4
+#
+
+#server:
+#  port: 9005
+#
+#spring:
+#  application:
+#    name: ApiGateway
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: AuthService
+#          uri: lb://AuthService
+#          predicates:
+#            - Path=/api/auth/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: TaskService
+#          uri: lb://TaskService
+#          predicates:
+#            - Path=/v0/task/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: ProjectService
+#          uri: lb://ProjectService
+#          predicates:
+#            - Path=/v0/projects/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: CommentService
+#          uri: lb://CommentService
+#          predicates:
+#            - Path=/v0/comments/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: SearchService
+#          uri: lb://SearchService
+#          predicates:
+#            - Path=/v0/search/**
+##          filters:
+##           - name: AuthenticationFilter
+#
+#jwt:
+#  secret: mySecretKey
+#  expiration: 3600000
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka
+#    enabled: true
+#  instance:
+#    hostname: localhost
+
+
+#server:
+#  port: 9005
+#
+#spring:
+#  application:
+#    name: ApiGateWay
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: AUTHSERVICE
+#          uri: lb://AUTHSERVICE
+#          predicates:
+#            - Path=/api/auth/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: TaskService
+#          uri: lb://TaskService
+#          predicates:
+#            - Path=/v0/task/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: ProjectService
+#          uri: lb://ProjectService
+#          predicates:
+#            - Path=/v0/projects/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: CommentService
+#          uri: lb://CommentService
+#          predicates:
+#            - Path=/v0/comments/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+## Uncomment and configure these properties if needed
+#jwt:
+#   secret: mySecretKey
+#   expiration: 3600000
+#   
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    enabled: true
+#		
+
+
+
+#server:
+#  port: 9000
+#
+#spring:
+#  application:
+#    name: ApiGateWay
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: AuthService
+#          uri: lb://AuthService
+#          predicates:
+#            - Path=/api/auth/**
+#
+#        - id: TaskService
+#          uri: lb://TaskService
+#          predicates:
+#            - Path=/v0/task/**
+#
+#        - id: ProjectService
+#          uri: lb://ProjectService
+#          predicates:
+#            - Path=/v0/projects/**
+#
+#        - id: CommentService
+#          uri: lb://CommentService
+#          predicates:
+#            - Path=/v0/comments/**
+#
+##jwt:
+##secret: mySecretKey
+##expiration: 86400
+##refreshExpiration: 2592000000
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    enabled: true
+
+
+#server:
+#  port: 9000
+#
+#spring:
+#  application:
+#    name: ApiGateway
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: AuthService
+#          uri: lb://AuthService
+#          predicates:
+#            - Path=/api/auth/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: TaskService
+#          uri: lb://TaskService
+#          predicates:
+#            - Path=/v0/task/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: ProjectService
+#          uri: lb://ProjectService
+#          predicates:
+#            - Path=/v0/projects/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: CommentService
+#          uri: lb://CommentService
+#          predicates:
+#            - Path=/v0/comments/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#        - id: SearchService
+#          uri: lb://SearchService
+#          predicates:
+#            - Path=/v0/search/**
+#          filters:
+#            - name: AuthenticationFilter
+#
+#jwt:
+#  secret: mySecretKey
+#  expiration: 3600000
+#
+#eureka:
+#  client:
+#    serviceUrl:  # Correct property name is serviceUrl, not service-url
+#      defaultZone: http://localhost:8761/eureka
+#    enabled: true
